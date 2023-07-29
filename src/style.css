@@ -1,0 +1,27 @@
+html {
+  height: 100%;
+  width: 100%;
+
+}
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+div#main-menu {
+  background-color: red;
+  max-width: 20%;
+  min-width: 272px;
+  height: 100%;
+}
+
+div#tasks-container {
+  height: 100%;
+  width: 80%;
+  min-width: 300px;
+
+  background-color: yellow;
+}
