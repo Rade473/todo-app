@@ -4,10 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="main-menu"></div>
-  <div id="tasks-container"></div>
+  <div id="app-container">
+    <div id="main-menu">
+      <input type="search" name="search-bar" id="search-bar">
+      <div class="tabs-container">
+      <div class="tab today">
+        <div class="icon">Icon</div>
+        <div class="task-count">10</div>
+        <div class="tab-name">Today</div>
+      </div>
+      <div class="tab planned">
+        <div class="icon">Icon</div>
+        <div class="task-count">5</div>
+        <div class="tab-name">Planned</div>
+      </div>
+      <div class="tab all">
+        <div class="icon">Icon</div>
+        <div class="task-count">5</div>
+        <div class="tab-name">All</div>
+      </div>
+      <div class="tab flagged">
+        <div class="icon">Icon</div>
+        <div class="task-count">5</div>
+        <div class="tab-name">Flagged</div>
+      </div>
+
+      <div class="tab done">
+        <div class="icon">Icon</div>
+        <div class="task-count">5</div>
+        <div class="tab-name">Done</div>
+      </div>
+    </div>
+      
+   
+    </div>
+    <div id="tasks-container">
+      <!-- Add your task lists here -->
+    </div>
+  </div>
 </body>
 <script src="main.js"></script>
 </html>

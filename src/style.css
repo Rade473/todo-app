@@ -1,27 +1,71 @@
-html {
+body, html {
   height: 100%;
-  width: 100%;
-
+  margin: 0;
+  padding: 0;
 }
-body {
-  margin: 0px;
-  padding: 0px;
-  height: 100%;
-  width: 100%;
+
+#app-container {
   display: flex;
+  height: 100%;
 }
 
-div#main-menu {
+#main-menu {
   background-color: red;
+  min-width: 270px;
   max-width: 20%;
-  min-width: 272px;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+
 }
 
-div#tasks-container {
-  height: 100%;
-  width: 80%;
-  min-width: 300px;
+#search-bar {
+  margin: 5px;
+  background-color: #f2f2f2;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
 
+.tabs-container{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px;
+  height: 35px;
+}
+
+.tab .icon {
+
+  /* Add your icon styles here */
+}
+
+.tab .task-count {
+ 
+  /* Add your task count styles here */
+}
+
+
+#tasks-container {
+  flex: 1;
+  min-width: 300px;
   background-color: yellow;
+}
+
+
+@media (max-width: 570px) {
+  #main-menu {
+    display: none;
+  }
+
+  #tasks-container{
+    min-width: 300px;
+  }
 }
