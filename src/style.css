@@ -42,12 +42,39 @@ body, html {
   height: 35px;
 }
 
-.tab .icon {
-
-  /* Add your icon styles here */
+.tab > .icon-container {
+  position: relative;
+  width: 24px;
+  height: 24px;
 }
 
-.tab .task-count {
+.tab > .icon-container > .icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: orange;
+  border-radius: 50%;
+ 
+
+}
+
+.icon > svg {
+  height: 100%;
+  width: 100%;
+  padding: 2px;
+}
+
+.calendar-date{
+  position: absolute;
+  font-size: 9px;
+  top: 33%;
+
+}
+
+.tab > .task-count {
  
   /* Add your task count styles here */
 }
