@@ -61,7 +61,48 @@ body, html {
 .tab.all > .icon > svg {
   height: 70%;
   width: 70%;
+  stroke: white;
+  fill: white;
 }
+
+.tab.today > .icon-container> .icon {
+  background-color: blue;
+ 
+}
+
+.tab.today > .icon-container> .icon > svg {
+  stroke: white;
+}
+
+.tab.planned > .icon {
+  background-color: red;
+}
+
+.tab.planned > .icon > svg {
+  stroke: white;
+}
+
+.tab.flagged > .icon {
+  background-color: orange;
+
+}
+
+.tab.flagged > .icon > svg {
+  stroke: white;
+  fill: white;
+  height: 70%;
+  width: 70%;
+}
+
+.tab.done > .icon {
+  background-color: darkgray;
+}
+
+.tab.done > .icon > svg {
+  stroke: white
+}
+
+
 
 .icon > svg {
   height: 100%;
@@ -69,11 +110,16 @@ body, html {
   padding: 2px;
 }
 
+.tab.all > .icon {
+  background-color: black;
+}
+
 
 .calendar-date{
   position: absolute;
-  font-size: 9px;
-  top: 33%;
+  font-size: 8px;
+  top: 42%;
+  color: white;
 }
 
 .tab > .tab-name {
@@ -89,7 +135,7 @@ body, html {
 }
 
 div.lists {
-  margin: 5px;
+  margin: 10px;
 }
 
 div.list {
@@ -98,6 +144,7 @@ div.list {
   align-items: center;
   border-radius: 10px;
   padding: 7px;
+  
 }
 
 div.list > p {
@@ -137,6 +184,12 @@ div.list > .icon > svg {
   outline: solid 3px rgb(64, 184, 224);
 }
 
+.lists > h5 {
+  margin: 0px;
+  font-size: 12px;
+  padding: 5px;
+ 
+}
 
 
 @media (max-width: 570px) {
