@@ -222,6 +222,7 @@ form#new-task-form {
   display: flex;
   flex-direction: column;
   flex:1;
+  position: relative;
 }
 
 
@@ -231,6 +232,31 @@ textarea {
   max-height: 300px;
   border: 0px;
   padding: 0px;
+
+}
+
+
+input#new-task-deadline{
+  width: 150px;
+  background-color: lightgray
+  ;
+  color: gray;
+  border: none;
+  padding: 3px;
+}
+
+
+input[type=datetime-local]::-webkit-calendar-picker-indicator {
+
+  display: none;
+}
+
+
+
+
+.set-time-label{
+  position:absolute;
+  bottom: 0%;
 }
 
 

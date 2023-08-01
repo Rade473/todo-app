@@ -9,3 +9,15 @@ function OnInput() {
   this.style.height = 0;
   this.style.height = this.scrollHeight + "px";
 }
+const dateTimePicker = document.getElementById("new-task-deadline");
+dateTimePicker.addEventListener("focus", DateonFocus);
+dateTimePicker.addEventListener("blur", DateonBlur);
+
+function DateonFocus() {
+  this.type = "datetime-local";
+  this.showPicker();
+}
+
+function DateonBlur() {
+  if (this.value.length == 0) this.type = "";
+}
