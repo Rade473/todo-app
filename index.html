@@ -63,30 +63,33 @@
       <h2> Today</h2>
       <div class="tasks-container">
     
-        <form action="newTask" method="post" id="new-task-form">
+        <form action="newTask" method="post" class="new-task-form" autocomplete="off">
           <div class="check-container">
             <div class="check">
-            <input type="checkbox" name="task-done" id="task-done">
+            <input type="checkbox" name="task-done" class="task-done">
           </div>
         </div>
         <div class="new-task-info">
-          <input type="text" name="new-task-name" id="new-task-name">
-          <textarea name="new-task-notes" id="new-task-notes" placeholder="Notes" rows="1"></textarea>
-          <input placeholder="Set time" name="new-task-deadline"  id="new-task-deadline">
+          <input type="text" onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }" name="new-task-name" maxlength="100" class="new-task-name">
+
+          <textarea name="new-task-notes"  placeholder="Notes" rows="1" maxlength="2000"></textarea>
+          <input placeholder=" &#128197;  Add date and time" name="new-task-deadline"  class="new-task-deadline">
+   
         </div>
         </form>
         
 
-        <form action="newTask" method="post" id="new-task-form">
+        <form action="newTask" method="post" class="new-task-form" autocomplete="off">
           <div class="check-container">
           <div class="check">
-          <input type="checkbox" name="task-done" id="task-done">
+          <input type="checkbox" name="task-done" class="task-done">
         </div>
       </div>
         <div class="new-task-info">
-          <input type="text" name="new-task-name" id="new-task-name">
-          <textarea name="new-task-notes" id="new-task-notes" placeholder="Notes" rows="1"></textarea>
-          <input placeholder="Set time" name="new-task-deadline"  id="new-task-deadline">
+          <input type="text"onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }" name="new-task-name"  maxlength="100" class="new-task-name">
+          <textarea name="new-task-notes" placeholder="Notes" rows="1"></textarea>
+          <input placeholder=" &#128197;  Add date and time" name="new-task-deadline"class="new-task-deadline" >
+
         </div>
         </form>
         
