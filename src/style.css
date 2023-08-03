@@ -238,26 +238,68 @@ textarea {
 
 input#new-task-deadline{
   width: 150px;
-  background-color: lightgray
-  ;
+  background-color: lightgray;
   color: gray;
   border: none;
   padding: 3px;
+  height: 20px;
 }
 
 
 input[type=datetime-local]::-webkit-calendar-picker-indicator {
-
   display: none;
 }
 
-
-
+input[type=datetime-local]:focus{
+  outline: none;
+}
 
 .set-time-label{
   position:absolute;
   bottom: 0%;
 }
+
+div.check-container{
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid gray;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+div.check {
+  height: 12px;
+  width: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+
+input[type=checkbox] {
+  opacity: 0%;
+
+}
+
+div.check:has(>#task-done:checked){
+  background-color: orange;
+}
+#task-done:checked + label {
+  background-color: blue;
+}
+
+
+
+
+
+
+
+
 
 
 @media (max-width: 570px) {

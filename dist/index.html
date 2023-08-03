@@ -64,12 +64,25 @@
       <div class="tasks-container">
     
         <form action="newTask" method="post" id="new-task-form">
+          <div class="check-container">
+            <div class="check">
+            <input type="checkbox" name="task-done" id="task-done">
+          </div>
+        </div>
+        <div class="new-task-info">
+          <input type="text" name="new-task-name" id="new-task-name">
+          <textarea name="new-task-notes" id="new-task-notes" placeholder="Notes" rows="1"></textarea>
+          <input placeholder="Set time" name="new-task-deadline"  id="new-task-deadline">
+        </div>
+        </form>
+        
+
+        <form action="newTask" method="post" id="new-task-form">
+          <div class="check-container">
           <div class="check">
-          <label for="task-done">
-            <span class="task-check"> done</span>
-          </label>
           <input type="checkbox" name="task-done" id="task-done">
         </div>
+      </div>
         <div class="new-task-info">
           <input type="text" name="new-task-name" id="new-task-name">
           <textarea name="new-task-notes" id="new-task-notes" placeholder="Notes" rows="1"></textarea>
