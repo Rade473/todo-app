@@ -317,7 +317,15 @@ div.check-container:has(>div.check>.task-done:checked){
   border:1px solid orange;
 }
 
+.collapsible {
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+  height: auto;
+}
 
+.collapsible.collapsed {
+  height:0;
+}
 
 textarea {
   resize: none;
@@ -325,6 +333,7 @@ textarea {
   max-height: 200px;
   border: 0px;
   font-size: 16px;
+  color: gray;
 }
 
 

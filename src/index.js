@@ -4,6 +4,7 @@ import {
   setTaskForms,
   setTextArea,
   setDoneCheckers,
+  closeMenusOnOutsideClick,
 } from "./helper";
 
 window.onload = function () {
@@ -11,4 +12,5 @@ window.onload = function () {
   setTextArea();
   setTaskForms();
   setDoneCheckers();
+  closeMenusOnOutsideClick();
 };
