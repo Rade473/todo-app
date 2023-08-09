@@ -1,5 +1,5 @@
-export function setTextArea() {
-  const tx = document.getElementsByTagName("textarea");
+export function setTextArea(element) {
+  const tx = element.getElementsByTagName("textarea");
   for (let i = 0; i < tx.length; i++) {
     tx[i].setAttribute("style", "height:" + tx[i].scrollHeight + "px;");
     tx[i].addEventListener("input", OnInput, false);
@@ -11,8 +11,8 @@ export function setTextArea() {
   }
 }
 
-export function setDateTimePicker() {
-  const dateTimePicker = document.getElementsByClassName("new-task-deadline");
+export function setDateTimePicker(element) {
+  const dateTimePicker = element.getElementsByClassName("new-task-deadline");
   for (let i = 0; i < dateTimePicker.length; i++) {
     dateTimePicker[i].addEventListener("focus", DateonFocus);
     dateTimePicker[i].addEventListener("blur", DateonBlur);
@@ -65,8 +65,8 @@ export function closeMenusOnOutsideClick() {
   });
 }
 
-export function setTaskForms() {
-  const taskForms = document.getElementsByClassName("new-task-info");
+export function setTaskForms(element) {
+  const taskForms = element.getElementsByClassName("new-task-info");
   for (let i = 0; i < taskForms.length; i++) {
     taskFormListener(taskForms[i]);
   }
@@ -85,11 +85,15 @@ function doneCheckersListener(check) {
   });
 }
 
-export function setDoneCheckers() {
-  const doneCheckers = document.getElementsByClassName("task-done");
+export function setDoneCheckers(element) {
+  const doneCheckers = element.getElementsByClassName("task-done");
   for (let i = 0; i < doneCheckers.length; i++) {
     doneCheckersListener(doneCheckers[i]);
   }
+}
+
+export function uniqueId() {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
 // Expand animation

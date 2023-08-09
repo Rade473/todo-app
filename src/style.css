@@ -156,6 +156,12 @@ div.list > .icon > svg {
   width: 70%;
 }
 
+div.header {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px;
+  margin-right: 20px;
+}
 
 
 #search-bar {
@@ -213,7 +219,7 @@ button#new-list{
   padding: 15px;
 }
 
-form.new-task-form {
+.new-task-form {
   display: flex;
 }
 
@@ -234,9 +240,6 @@ form.new-task-form {
   height: auto;
 
 }
-
-
-
 
 textarea:focus{
   outline: none;
@@ -336,6 +339,30 @@ textarea {
   color: gray;
 }
 
+#new-task-button {
+  position: absolute;
+  right: 2%;
+  top: 5%;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  color: gray;
+  padding: 0px;
+}
+
+#new-task-button > svg {
+  height: 30px;
+  width: 30px;
+  fill: gray;
+}
+
+#new-task-button:hover {
+  cursor: pointer;
+}
 
 
 
