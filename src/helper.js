@@ -92,10 +92,6 @@ export function setDoneCheckers(element) {
   }
 }
 
-export function uniqueId() {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
-
 // Expand animation
 // const button = document.querySelector(".button");
 

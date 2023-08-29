@@ -1,6 +1,5 @@
 export function fillTaskData(form, task) {
   form.setAttribute("id", task.id);
-  console.log(task.id);
   let formElements = getFormElements(form);
   formElements.nameInput.value = task.name;
   formElements.noteInput.value = task.note;
@@ -37,14 +36,11 @@ export function getFormElements(form) {
   };
 }
 
-function filterTodayTasks() {}
-
-function sameDay(d1, d2) {
-  return (
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate() &&
-    d1.getFullYear() === d2.getFullYear()
-  );
+function addEventListenersToTabs() {
+  const todayTab = documennt.getElementById("today-tab");
+  const plannedTab = document.getElementById("planned-tab");
+  const allTab = document.getElementById("all-tab");
+  const doneTab = document.getElementById("done-tab");
 }
 
 export function createNewTaskForm() {

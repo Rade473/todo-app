@@ -10,17 +10,22 @@ import {
 import { getFormElements, fillTaskData, createNewTaskForm } from "./display";
 
 const tasksContainer = document.getElementById("tasks-container");
-const allTasks = [];
-const lateTasks = filterLateTasks;
-const futureTasks = filterFutureTasks;
+const lists = [];
+
+// Create lists button
+
+// Save list to local storage with id reference to the task
+
+//
 
 function loadTasks() {
+  let allTasks = [];
   for (let i = 0; i < localStorage.length; i++) {
     let task = JSON.parse(localStorage.getItem(localStorage.key(i)));
     allTasks.push(task);
   }
-
   allTasks.sort((a, b) => a.date - b.date);
+  return allTasks;
 }
 
 window.onload = function () {
@@ -33,10 +38,26 @@ window.onload = function () {
   setNewTaskButton();
   loadTasks();
   populateTaskPage(allTasks);
-  filterTodayTasks(allTasks);
-  filterLateTasks(allTasks);
-  filterFutureTasks(allTasks);
+  setTab(todayTab, filterTodayTasks(allTasks));
+  setTab(plannedTab, filterFutureTasks(allTasks));
+  setTab(allTab, allTasks);
+  setTab(doneTab, filterDoneTasks(allTasks));
 };
+const todayTab = document.getElementById("today-tab");
+const plannedTab = document.getElementById("planned-tab");
+const allTab = document.getElementById("all-tab");
+const doneTab = document.getElementById("done-tab");
+
+const allTasks = loadTasks();
+
+function setTab(tab, taskList) {
+  tab.addEventListener("click", function (event) {
+    clearTaskPage();
+    populateTaskPage(taskList);
+  });
+}
+
+// add listeners to tabs
 
 // HTML element is created and appended
 
@@ -79,10 +100,10 @@ function saveTask(taskForm) {
   const task = createTask(taskForm.id, name, note, deadline, done, date);
   if (taskForm.id in localStorage) {
     changeTask(taskForm.id, name, note, deadline, done);
-    console.log(localStorage);
   } else {
+    allTasks.push(task);
+    console.log(allTasks);
     localStorage.setItem(taskForm.id, JSON.stringify(task));
-    console.log(localStorage);
   }
 }
 
@@ -104,6 +125,11 @@ function changeTask(id, name, note, deadline, done) {
   task.deadline = deadline;
   task.done = done;
   localStorage.setItem(id, JSON.stringify(task));
+  let replaceTask = allTasks.find((x) => x.id === task.id);
+  Object.assign(replaceTask, task);
+}
+function clearTaskPage() {
+  tasksContainer.innerHTML = "";
 }
 
 function populateTaskPage(taskArray) {
@@ -122,7 +148,6 @@ function filterTodayTasks(array) {
       todayTasks.push(array[i]);
     }
   }
-  console.log(todayTasks);
   return todayTasks;
 }
 
@@ -132,7 +157,6 @@ function filterLateTasks(array) {
     let taskDate = array[i].deadline;
     if (new Date(taskDate) < Date.now()) lateTasks.push(array[i]);
   }
-  console.log(lateTasks);
   return lateTasks;
 }
 
@@ -142,8 +166,17 @@ function filterFutureTasks(array) {
     let taskDate = array[i].deadline;
     if (new Date(taskDate) > Date.now()) futureTasks.push(array[i]);
   }
-  console.log(futureTasks);
   return futureTasks;
+}
+
+function filterDoneTasks(array) {
+  let doneTasks = [];
+  console.log("done");
+  for (let i = 0; i < array.length; i++) {
+    let taskDone = array[i].done;
+    if (taskDone) doneTasks.push(array[i]);
+  }
+  return doneTasks;
 }
 
 function sameDay(date1, date2) {
