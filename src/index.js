@@ -6,7 +6,9 @@ import {
   setDoneCheckers,
   closeMenusOnOutsideClick,
 } from "./helper";
-
+import { isToday } from "date-fns";
+import { format } from "date-fns";
+// var format = require("date-fns/format");
 import { getFormElements, fillTaskData, createNewTaskForm } from "./display";
 
 const tasksContainer = document.getElementById("tasks-container");
@@ -38,10 +40,7 @@ window.onload = function () {
   setNewTaskButton();
   loadTasks();
   populateTaskPage(allTasks);
-  setTab(todayTab, filterTodayTasks(allTasks));
-  setTab(plannedTab, filterFutureTasks(allTasks));
-  setTab(allTab, allTasks);
-  setTab(doneTab, filterDoneTasks(allTasks));
+  setTabs();
 };
 const todayTab = document.getElementById("today-tab");
 const plannedTab = document.getElementById("planned-tab");
@@ -50,6 +49,24 @@ const doneTab = document.getElementById("done-tab");
 
 const allTasks = loadTasks();
 
+function setTabs() {
+  todayTab.addEventListener("click", function (event) {
+    clearTaskPage();
+    populateTaskPage(filterTodayTasks(allTasks));
+  });
+  plannedTab.addEventListener("click", function (event) {
+    clearTaskPage();
+    populateTaskPage(filterFutureTasks(allTasks));
+  });
+  allTab.addEventListener("click", function (event) {
+    clearTaskPage();
+    populateTaskPage(allTasks);
+  });
+  doneTab.addEventListener("click", function (event) {
+    clearTaskPage();
+    populateTaskPage(filterDoneTasks(allTasks));
+  });
+}
 function setTab(tab, taskList) {
   tab.addEventListener("click", function (event) {
     clearTaskPage();
@@ -94,7 +111,12 @@ function saveTask(taskForm) {
   let data = getFormElements(taskForm);
   let name = data.nameInput.value;
   let note = data.noteInput.value;
-  let deadline = data.deadlineInput.value;
+  console.log(data.deadlineInput.value);
+  let deadline = format(
+    new Date(data.deadlineInput.value),
+    "dd.MM.yyyy',' HH:mm"
+  );
+
   let done = data.doneInput.checked;
   let date = Date.now();
   const task = createTask(taskForm.id, name, note, deadline, done, date);
@@ -102,7 +124,6 @@ function saveTask(taskForm) {
     changeTask(taskForm.id, name, note, deadline, done);
   } else {
     allTasks.push(task);
-    console.log(allTasks);
     localStorage.setItem(taskForm.id, JSON.stringify(task));
   }
 }
@@ -122,6 +143,7 @@ function changeTask(id, name, note, deadline, done) {
   const task = JSON.parse(localStorage.getItem(id));
   task.name = name;
   task.note = note;
+
   task.deadline = deadline;
   task.done = done;
   localStorage.setItem(id, JSON.stringify(task));
@@ -171,7 +193,7 @@ function filterFutureTasks(array) {
 
 function filterDoneTasks(array) {
   let doneTasks = [];
-  console.log("done");
+
   for (let i = 0; i < array.length; i++) {
     let taskDone = array[i].done;
     if (taskDone) doneTasks.push(array[i]);
