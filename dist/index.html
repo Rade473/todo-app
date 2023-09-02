@@ -3,10 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-
+  <title>Reminders</title>
+  <style>html{visibility: hidden;opacity:0;}</style>
 </head>
 <body>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <div class="list-form-container">
+        <label for="new-list-name">Name:</label><input type="text" autofocus id="new-list-name" name="new-list-name">
+      </div>
+      <div class="list-form-container">
+      <label for="coor">Color:</label><input type="color" id="color" name="color" value="#e66465" />     <button id="save-list"> Save list</button>
+    </div>
+    </div>
+
+  </div>
+
   <div id="app-container">
     <div id="main-menu">
       <input type="search" name="search-bar" id="search-bar" placeholder="Search">
@@ -31,11 +43,7 @@
         <div class="task-count">5</div>
         <div class="tab-name">All tasks</div>
     </div>
-      <div class="tab flagged" id="flagged-tab">
-        <div class="icon"><svg viewBox="0 0 24.00 24.00" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"  stroke="#000000" > <path d="M5 21V3.90002C5 3.90002 5.875 3 8.5 3C11.125 3 12.875 4.8 15.5 4.8C18.125 4.8 19 3.9 19 3.9V14.7C19 14.7 18.125 15.6 15.5 15.6C12.875 15.6 11.125 13.8 8.5 13.8C5.875 13.8 5 14.7 5 14.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </svg></div>
-        <div class="task-count">5</div>
-        <div class="tab-name">Flagged</div>
-        </div>
+ 
       <div class="tab done" id="done-tab">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" stroke="#000000"> <path d="M5 14L8.23309 16.4248C8.66178 16.7463 9.26772 16.6728 9.60705 16.2581L18 6"  stroke-width="2" stroke-linecap="round"></path> </svg></div>
         <div class="task-count">5</div>

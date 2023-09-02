@@ -28,6 +28,36 @@ export function setDateTimePicker(element) {
   }
 }
 
+export function newListForm() {
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  // Get the button that opens the modal
+  const newListButton = document.getElementById("new-list");
+  // Get the <span> element that closes the modal
+
+  var newname = document.getElementById("new-list-name");
+  // When the user clicks on the button, open the modal
+  newListButton.onclick = function () {
+    modal.classList.add("show");
+    newname.focus();
+  };
+  // When the user clicks on <span> (x), close the modal
+  const saveListButton = document.getElementById("save-list");
+  saveListButton.onclick = function () {
+    modal.classList.remove("show");
+  };
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.classList.remove("show");
+    }
+  };
+}
+
+function saveList() {
+  console.log("saved");
+}
+
 function closeMenus() {
   let openMenus = document.getElementsByClassName("new-task-info show");
   if (openMenus.length > 0) {

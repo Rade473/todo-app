@@ -5,6 +5,7 @@ import {
   setTextArea,
   setDoneCheckers,
   closeMenusOnOutsideClick,
+  newListForm,
 } from "./helper";
 import { isToday } from "date-fns";
 import { format } from "date-fns";
@@ -14,11 +15,15 @@ import { getFormElements, fillTaskData, createNewTaskForm } from "./display";
 const tasksContainer = document.getElementById("tasks-container");
 const lists = [];
 
-// Create lists button
-
 // Save list to local storage with id reference to the task
 
+// Create lists button
+
 //
+
+function createNewList() {
+  console.log("newList");
+}
 
 function loadTasks() {
   let allTasks = [];
@@ -41,7 +46,10 @@ window.onload = function () {
   loadTasks();
   populateTaskPage(allTasks);
   setTabs();
+  newListForm();
+  setSaveListButton();
 };
+
 const todayTab = document.getElementById("today-tab");
 const plannedTab = document.getElementById("planned-tab");
 const allTab = document.getElementById("all-tab");
@@ -67,14 +75,15 @@ function setTabs() {
     populateTaskPage(filterDoneTasks(allTasks));
   });
 }
+
+// add listeners to tabs
+
 function setTab(tab, taskList) {
   tab.addEventListener("click", function (event) {
     clearTaskPage();
     populateTaskPage(taskList);
   });
 }
-
-// add listeners to tabs
 
 // HTML element is created and appended
 
@@ -98,6 +107,7 @@ function setNewTaskButton() {
   });
 }
 
+//  form submittion listener on name of the task(enter key press)
 function setFormSubmit(element) {
   const formName = element.getElementsByClassName("new-task-name");
   formName[0].addEventListener("keydown", function (event) {
@@ -105,6 +115,27 @@ function setFormSubmit(element) {
       saveTask(this.parentElement.parentElement.parentElement);
     }
   });
+}
+
+function setSaveListButton() {
+  const saveListButton = document.getElementById("save-list");
+  saveListButton.addEventListener("click", function () {
+    saveList();
+  });
+}
+
+function saveList() {
+  var data = getListInfo();
+  console.log(data);
+}
+
+function getListInfo() {
+  var name = document.getElementById("new-list-name").value;
+  var color = document.getElementById("color").value;
+  return {
+    name: name,
+    color: color,
+  };
 }
 
 function saveTask(taskForm) {
