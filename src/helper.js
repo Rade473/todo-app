@@ -54,10 +54,6 @@ export function newListForm() {
   };
 }
 
-function saveList() {
-  console.log("saved");
-}
-
 function closeMenus() {
   let openMenus = document.getElementsByClassName("new-task-info show");
   if (openMenus.length > 0) {

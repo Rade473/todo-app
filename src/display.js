@@ -7,27 +7,41 @@ export function fillTaskData(form, task) {
 
   formElements.nameInput.value = task.name;
   formElements.noteInput.value = task.note;
-
-  formElements.deadlineInput.value = format(
-    parse(task.deadline, "dd.MM.yyyy',' HH:mm", new Date()),
-    "dd.MM.yyyy',' HH:mm"
+  formElements.deadlineInput.value = parse(
+    task.deadline,
+    "dd.MM.yyyy, HH:mm",
+    new Date()
   );
+
+  console.log(formElements.deadlineInput.value);
 
   formElements.doneInput.checked = task.done;
   return form;
 }
 
 export function getFormElements(form) {
-  const nameInput = form.getElementsByClassName("new-task-name")[0];
-  const noteInput = form.getElementsByClassName("new-task-notes")[0];
-  const deadline = form.getElementsByClassName("new-task-deadline")[0];
-  const done = form.getElementsByClassName("task-done")[0];
+  let nameInput = form.getElementsByClassName("new-task-name")[0];
+  let noteInput = form.getElementsByClassName("new-task-notes")[0];
+  let deadline = form.getElementsByClassName("new-task-deadline")[0];
+  let done = form.getElementsByClassName("task-done")[0];
+
   return {
     nameInput: nameInput,
     noteInput: noteInput,
     deadlineInput: deadline,
     doneInput: done,
   };
+}
+
+export function createNewListForm(name, color) {
+  const hiddenListForm = document.getElementById("hidden-list");
+  const newList = hiddenListForm.cloneNode(true);
+  newList.setAttribute("id", "");
+  let title = newList.getElementsByTagName("p")[0];
+  title.textContent = name;
+  let icon = newList.getElementsByClassName("icon")[0];
+  icon.style.background = color;
+  document.getElementById("lists-container").appendChild(newList);
 }
 
 export function createNewTaskForm() {

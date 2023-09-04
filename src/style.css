@@ -56,7 +56,6 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: orange;
   border-radius: 50%;
 }
 
@@ -84,10 +83,6 @@ body, html {
   stroke: white;
 }
 
-.tab.flagged > .icon {
-  background-color: orange;
-
-}
 
 .tab.flagged > .icon > svg {
   stroke: white;
@@ -141,12 +136,16 @@ div.lists {
 }
 
 div.list {
-  background-color: white;
+
   display: flex;
   align-items: center;
   border-radius: 10px;
   padding: 7px;
   
+}
+
+div#hidden-list{
+  display: none;
 }
 
 div.list > p {
@@ -264,7 +263,7 @@ input[type=text]{
 input, select, textarea, button{font-family:inherit;}
 
 
-input.new-task-deadline{
+.new-task-deadline{
   width: 150px;
   background-color: rgb(234, 232, 232);
   border-radius: 5px;
@@ -272,6 +271,7 @@ input.new-task-deadline{
   border: none;
   padding: 3px;
   height: 20px;
+  font-size: 0.8rem;
 }
 
 
@@ -413,6 +413,7 @@ textarea {
   transition: outline 0.5s;
   width: 100%;
   padding: 5px;
+  margin-bottom: 0px;
 }
 
 div.list-form-container{

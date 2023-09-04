@@ -9,11 +9,19 @@ import {
 } from "./helper";
 import { isToday } from "date-fns";
 import { format } from "date-fns";
+import { parse } from "date-fns";
+import { isAfter } from "date-fns";
+import { isBefore } from "date-fns";
 // var format = require("date-fns/format");
-import { getFormElements, fillTaskData, createNewTaskForm } from "./display";
+import {
+  getFormElements,
+  fillTaskData,
+  createNewTaskForm,
+  createNewListForm,
+} from "./display";
 
 const tasksContainer = document.getElementById("tasks-container");
-const lists = [];
+const lists = loadLists();
 
 // Save list to local storage with id reference to the task
 
@@ -21,18 +29,27 @@ const lists = [];
 
 //
 
-function createNewList() {
-  console.log("newList");
-}
-
 function loadTasks() {
   let allTasks = [];
   for (let i = 0; i < localStorage.length; i++) {
-    let task = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    allTasks.push(task);
+    if (localStorage.key(i) !== "lists") {
+      let task = JSON.parse(localStorage.getItem(localStorage.key(i)));
+      allTasks.push(task);
+    }
   }
   allTasks.sort((a, b) => a.date - b.date);
   return allTasks;
+}
+
+function loadLists() {
+  if (localStorage.getItem("lists") !== null) {
+    let lists = JSON.parse(localStorage.getItem("lists"));
+
+    for (let i = 0; i < lists.length; i++) {
+      createNewListForm(lists[i].name, lists[i].color);
+    }
+    return lists;
+  }
 }
 
 window.onload = function () {
@@ -54,23 +71,22 @@ const todayTab = document.getElementById("today-tab");
 const plannedTab = document.getElementById("planned-tab");
 const allTab = document.getElementById("all-tab");
 const doneTab = document.getElementById("done-tab");
-
 const allTasks = loadTasks();
 
 function setTabs() {
-  todayTab.addEventListener("click", function (event) {
+  todayTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterTodayTasks(allTasks));
   });
-  plannedTab.addEventListener("click", function (event) {
+  plannedTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterFutureTasks(allTasks));
   });
-  allTab.addEventListener("click", function (event) {
+  allTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(allTasks);
   });
-  doneTab.addEventListener("click", function (event) {
+  doneTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterDoneTasks(allTasks));
   });
@@ -124,9 +140,15 @@ function setSaveListButton() {
   });
 }
 
+function addTaskToList(list, task_id) {
+  list.tasks.push(task_id);
+}
+
 function saveList() {
-  var data = getListInfo();
-  console.log(data);
+  var list = getListInfo();
+  lists.push(list);
+  localStorage.setItem("lists", JSON.stringify(lists));
+  createNewListForm(list.name, list.color);
 }
 
 function getListInfo() {
@@ -135,6 +157,7 @@ function getListInfo() {
   return {
     name: name,
     color: color,
+    tasks: [],
   };
 }
 
@@ -142,10 +165,10 @@ function saveTask(taskForm) {
   let data = getFormElements(taskForm);
   let name = data.nameInput.value;
   let note = data.noteInput.value;
-  console.log(data.deadlineInput.value);
+
   let deadline = format(
     new Date(data.deadlineInput.value),
-    "dd.MM.yyyy',' HH:mm"
+    "dd.MM.yyyy, HH:mm"
   );
 
   let done = data.doneInput.checked;
@@ -174,7 +197,6 @@ function changeTask(id, name, note, deadline, done) {
   const task = JSON.parse(localStorage.getItem(id));
   task.name = name;
   task.note = note;
-
   task.deadline = deadline;
   task.done = done;
   localStorage.setItem(id, JSON.stringify(task));
@@ -197,18 +219,23 @@ function filterTodayTasks(array) {
   let todayTasks = [];
   for (let i = 0; i < array.length; i++) {
     let taskDate = array[i].deadline;
-    if (sameDay(taskDate, Date.now())) {
+    if (isToday(getADate(taskDate))) {
       todayTasks.push(array[i]);
     }
   }
   return todayTasks;
 }
 
+function getADate(string) {
+  return parse(string, "dd.MM.yyyy, HH:mm", new Date());
+}
+
 function filterLateTasks(array) {
   let lateTasks = [];
   for (let i = 0; i < array.length; i++) {
     let taskDate = array[i].deadline;
-    if (new Date(taskDate) < Date.now()) lateTasks.push(array[i]);
+    if (isBefore(getADate(taskDate), new Date(Date.now())))
+      lateTasks.push(array[i]);
   }
   return lateTasks;
 }
@@ -217,8 +244,11 @@ function filterFutureTasks(array) {
   let futureTasks = [];
   for (let i = 0; i < array.length; i++) {
     let taskDate = array[i].deadline;
-    if (new Date(taskDate) > Date.now()) futureTasks.push(array[i]);
+
+    if (isBefore(new Date(Date.now()), getADate(taskDate)))
+      futureTasks.push(array[i]);
   }
+  console.log(futureTasks);
   return futureTasks;
 }
 
@@ -230,15 +260,4 @@ function filterDoneTasks(array) {
     if (taskDone) doneTasks.push(array[i]);
   }
   return doneTasks;
-}
-
-function sameDay(date1, date2) {
-  let d1 = new Date(date1);
-  let d2 = new Date(date2);
-
-  return (
-    d1.getDate() === d2.getDate() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getFullYear() === d2.getFullYear()
-  );
 }
