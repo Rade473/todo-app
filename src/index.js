@@ -6,13 +6,16 @@ import {
   setDoneCheckers,
   closeMenusOnOutsideClick,
   newListForm,
+  setLocalStorageButton,
+  listOptionsController,
+  addOptionToTheListSelect,
 } from "./helper";
 import { isToday } from "date-fns";
 import { format } from "date-fns";
 import { parse } from "date-fns";
 import { isAfter } from "date-fns";
 import { isBefore } from "date-fns";
-// var format = require("date-fns/format");
+
 import {
   getFormElements,
   fillTaskData,
@@ -42,6 +45,7 @@ function loadTasks() {
 }
 
 function loadLists() {
+  let emptyarray = [];
   if (localStorage.getItem("lists") !== null) {
     let lists = JSON.parse(localStorage.getItem("lists"));
 
@@ -49,7 +53,7 @@ function loadLists() {
       createNewListForm(lists[i].name, lists[i].color);
     }
     return lists;
-  }
+  } else return emptyarray;
 }
 
 window.onload = function () {
@@ -65,6 +69,8 @@ window.onload = function () {
   setTabs();
   newListForm();
   setSaveListButton();
+  setLocalStorageButton();
+  setSelectLists(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -114,6 +120,7 @@ function setListenersForFormElements(form) {
   setTaskForms(form);
   setDoneCheckers(form);
   setFormSubmit(form);
+  setSelectElement(form);
 }
 
 function setNewTaskButton() {
@@ -133,6 +140,23 @@ function setFormSubmit(element) {
   });
 }
 
+function setSelectElement(element) {
+  const selectElements = element.getElementsByClassName("select-list");
+  for (let i = 0; i < selectElements.length; i++) {
+    selectElements[i].addEventListener("change", function () {
+      listOptionsController(this);
+    });
+  }
+}
+
+function setSelectLists(element) {
+  const select = element.getElementsByClassName("select-list");
+  for (let i = 0; i < select.length; i++) {
+    console.log(select[i]);
+    addOptionToTheListSelect(select[i], lists);
+  }
+}
+
 function setSaveListButton() {
   const saveListButton = document.getElementById("save-list");
   saveListButton.addEventListener("click", function () {
@@ -146,6 +170,7 @@ function addTaskToList(list, task_id) {
 
 function saveList() {
   var list = getListInfo();
+
   lists.push(list);
   localStorage.setItem("lists", JSON.stringify(lists));
   createNewListForm(list.name, list.color);
@@ -166,10 +191,14 @@ function saveTask(taskForm) {
   let name = data.nameInput.value;
   let note = data.noteInput.value;
 
-  let deadline = format(
-    new Date(data.deadlineInput.value),
-    "dd.MM.yyyy, HH:mm"
-  );
+  function checkifDateEntered() {
+    if (data.deadlineInput.value.length > 0) {
+      return format(new Date(data.deadlineInput.value), "dd.MM.yyyy, HH:mm");
+    } else {
+      return null;
+    }
+  }
+  let deadline = checkifDateEntered();
 
   let done = data.doneInput.checked;
   let date = Date.now();
@@ -248,7 +277,7 @@ function filterFutureTasks(array) {
     if (isBefore(new Date(Date.now()), getADate(taskDate)))
       futureTasks.push(array[i]);
   }
-  console.log(futureTasks);
+
   return futureTasks;
 }
 

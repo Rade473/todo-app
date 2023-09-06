@@ -7,13 +7,15 @@ export function fillTaskData(form, task) {
 
   formElements.nameInput.value = task.name;
   formElements.noteInput.value = task.note;
-  formElements.deadlineInput.value = parse(
-    task.deadline,
-    "dd.MM.yyyy, HH:mm",
-    new Date()
-  );
 
-  console.log(formElements.deadlineInput.value);
+  function checkifDateEntered() {
+    if (task.deadline !== null) {
+      return parse(task.deadline, "dd.MM.yyyy, HH:mm", new Date());
+    } else {
+      return "";
+    }
+  }
+  formElements.deadlineInput.value = checkifDateEntered();
 
   formElements.doneInput.checked = task.done;
   return form;

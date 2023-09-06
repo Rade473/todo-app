@@ -264,7 +264,7 @@ input, select, textarea, button{font-family:inherit;}
 
 
 .new-task-deadline{
-  width: 150px;
+  width: 155px;
   background-color: rgb(234, 232, 232);
   border-radius: 5px;
   color: gray;
@@ -467,6 +467,21 @@ button#save-list{
  
   margin-left: auto;
 }
+
+button#clear-storage{
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+  background: none;
+  border: none;
+  text-decoration-line: underline;
+  color: #aaa;
+
+}
+button#clear-storage:hover{
+  cursor: pointer;
+}
+
 html {
   visibility: visible;
   opacity: 1;

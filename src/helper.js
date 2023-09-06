@@ -28,6 +28,15 @@ export function setDateTimePicker(element) {
   }
 }
 
+export function setLocalStorageButton() {
+  const clearStorageButton = document.getElementById("clear-storage");
+  clearStorageButton.addEventListener("click", clearStorage);
+}
+
+function clearStorage() {
+  localStorage.clear();
+}
+
 export function newListForm() {
   // Get the modal
   var modal = document.getElementById("myModal");
@@ -91,10 +100,28 @@ export function closeMenusOnOutsideClick() {
   });
 }
 
+export function listOptionsController(task) {
+  if (task.value == "Add a list") {
+    console.log("remove this task from any lists");
+  } else if (task.value === "new-list") {
+    console.log("create new list");
+  } else {
+    console.log("chosen list");
+  }
+}
 export function setTaskForms(element) {
   const taskForms = element.getElementsByClassName("new-task-info");
   for (let i = 0; i < taskForms.length; i++) {
     taskFormListener(taskForms[i]);
+  }
+}
+
+export function addOptionToTheListSelect(element, lists) {
+  for (let i = 0; i < lists.length; i++) {
+    let option = document.createElement("option");
+    option.value = lists[i].name;
+    option.textContent = lists[i].name;
+    element.prepend(option);
   }
 }
 
@@ -117,6 +144,8 @@ export function setDoneCheckers(element) {
     doneCheckersListener(doneCheckers[i]);
   }
 }
+
+function selectListOptions(choice) {}
 
 // Expand animation
 // const button = document.querySelector(".button");
