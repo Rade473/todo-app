@@ -263,7 +263,7 @@ input[type=text]{
 input, select, textarea, button{font-family:inherit;}
 
 
-.new-task-deadline{
+.new-task-deadline, .select-list{
   width: 155px;
   background-color: rgb(234, 232, 232);
   border-radius: 5px;
@@ -272,6 +272,11 @@ input, select, textarea, button{font-family:inherit;}
   padding: 3px;
   height: 20px;
   font-size: 0.8rem;
+}
+
+.select-list {
+  height: 27px;
+  margin-top: 2px;
 }
 
 

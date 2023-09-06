@@ -106,6 +106,7 @@ export function listOptionsController(task) {
   } else if (task.value === "new-list") {
     console.log("create new list");
   } else {
+    console.log(task.value);
     console.log("chosen list");
   }
 }
