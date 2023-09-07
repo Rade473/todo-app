@@ -100,14 +100,18 @@ export function closeMenusOnOutsideClick() {
   });
 }
 
-export function listOptionsController(task) {
-  if (task.value == "Add a list") {
+export function listOptionsController(choice_element) {
+  console.log(choice_element);
+  if (choice_element.value === "Add a list") {
     console.log("remove this task from any lists");
-  } else if (task.value === "new-list") {
+  } else if (choice_element.value === "new-list") {
     console.log("create new list");
   } else {
-    console.log(task.value);
-    console.log("chosen list");
+    let task_id =
+      choice_element.parentElement.parentElement.parentElement.parentElement.id;
+    console.log();
+
+    // call a function to add the task id to the corresponding list
   }
 }
 export function setTaskForms(element) {
@@ -120,7 +124,7 @@ export function setTaskForms(element) {
 export function addOptionToTheListSelect(element, lists) {
   for (let i = 0; i < lists.length; i++) {
     let option = document.createElement("option");
-    option.value = lists[i].name;
+    option.value = lists[i].id;
     option.textContent = lists[i].name;
     element.prepend(option);
   }

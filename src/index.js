@@ -7,7 +7,6 @@ import {
   closeMenusOnOutsideClick,
   newListForm,
   setLocalStorageButton,
-  listOptionsController,
   addOptionToTheListSelect,
 } from "./helper";
 import { isToday } from "date-fns";
@@ -21,6 +20,8 @@ import {
   fillTaskData,
   createNewTaskForm,
   createNewListForm,
+  changePageTitle,
+  changeTitleColor,
 } from "./display";
 
 const tasksContainer = document.getElementById("tasks-container");
@@ -50,7 +51,7 @@ function loadLists() {
     let lists = JSON.parse(localStorage.getItem("lists"));
 
     for (let i = 0; i < lists.length; i++) {
-      createNewListForm(lists[i].name, lists[i].color);
+      createNewListForm(lists[i].name, lists[i].color, lists[i].id);
     }
     return lists;
   } else return emptyarray;
@@ -71,6 +72,7 @@ window.onload = function () {
   setSaveListButton();
   setLocalStorageButton();
   setSelectLists(document);
+  setListListeners(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -83,31 +85,28 @@ function setTabs() {
   todayTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterTodayTasks(allTasks));
+    changePageTitle("Today");
+    changeTitleColor("blue");
   });
   plannedTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterFutureTasks(allTasks));
+    changePageTitle("Planned");
+    changeTitleColor("red");
   });
   allTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(allTasks);
+    changePageTitle("All tasks");
+    changeTitleColor("black");
   });
   doneTab.addEventListener("click", function () {
     clearTaskPage();
     populateTaskPage(filterDoneTasks(allTasks));
+    changePageTitle("Done");
+    changeTitleColor("gray");
   });
 }
-
-// add listeners to tabs
-
-function setTab(tab, taskList) {
-  tab.addEventListener("click", function (event) {
-    clearTaskPage();
-    populateTaskPage(taskList);
-  });
-}
-
-// HTML element is created and appended
 
 function addFormToWindow(form) {
   tasksContainer.appendChild(form);
@@ -152,7 +151,6 @@ function setSelectElement(element) {
 function setSelectLists(element) {
   const select = element.getElementsByClassName("select-list");
   for (let i = 0; i < select.length; i++) {
-    console.log(select[i]);
     addOptionToTheListSelect(select[i], lists);
   }
 }
@@ -160,20 +158,44 @@ function setSelectLists(element) {
 function setSaveListButton() {
   const saveListButton = document.getElementById("save-list");
   saveListButton.addEventListener("click", function () {
-    saveList();
+    saveNewList();
   });
 }
 
-function addTaskToList(list, task_id) {
-  list.tasks.push(task_id);
+function listOptionsController(choice_element) {
+  if (choice_element.value === "Add a list") {
+    console.log("remove this task from any lists");
+  } else if (choice_element.value === "new-list") {
+    console.log("create new list");
+  } else {
+    let task_id =
+      choice_element.parentElement.parentElement.parentElement.parentElement.id;
+    addTaskToList(choice_element.value, task_id);
+  }
 }
 
-function saveList() {
-  var list = getListInfo();
+function addTaskToList(list_id, task_id) {
+  let list = findList(list_id);
+  list.tasks.push(task_id);
+  console.log(list);
+}
 
+function findList(list_id) {
+  let list = lists.find((obj) => {
+    return obj.id === Number(list_id);
+  });
+  return list;
+}
+
+function saveNewList() {
+  var list = getListInfo();
+  saveList(list);
+  createNewListForm(list.name, list.color, list.id);
+}
+
+function saveList(list) {
   lists.push(list);
   localStorage.setItem("lists", JSON.stringify(lists));
-  createNewListForm(list.name, list.color);
 }
 
 function getListInfo() {
@@ -183,7 +205,29 @@ function getListInfo() {
     name: name,
     color: color,
     tasks: [],
+    id: Date.now(),
   };
+}
+
+function setListListeners(element) {
+  let listsElements = element.getElementsByClassName("list");
+  for (let i = 0; i < listsElements.length; i++) {
+    listsElements[i].addEventListener("click", function () {
+      filterTasksByList(this.id);
+    });
+  }
+}
+
+function filterTasksByList(list_id) {
+  let list = findList(list_id);
+  let tasks = [];
+  for (let i = 0; i < list.tasks.length; i++) {
+    let task = allTasks.filter((obj) => {
+      return obj.id === allTasks.id;
+    });
+    tasks.push(task);
+  }
+  console.log(tasks);
 }
 
 function saveTask(taskForm) {

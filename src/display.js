@@ -35,10 +35,10 @@ export function getFormElements(form) {
   };
 }
 
-export function createNewListForm(name, color) {
+export function createNewListForm(name, color, id) {
   const hiddenListForm = document.getElementById("hidden-list");
   const newList = hiddenListForm.cloneNode(true);
-  newList.setAttribute("id", "");
+  newList.setAttribute("id", id);
   let title = newList.getElementsByTagName("p")[0];
   title.textContent = name;
   let icon = newList.getElementsByClassName("icon")[0];
@@ -56,4 +56,13 @@ export function createNewTaskForm() {
 
 function uniqueId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
+}
+
+const pageTitle = document.getElementById("page-title");
+export function changePageTitle(title) {
+  pageTitle.textContent = title;
+}
+
+export function changeTitleColor(color) {
+  pageTitle.style.color = color;
 }
