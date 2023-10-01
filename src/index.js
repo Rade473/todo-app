@@ -26,6 +26,7 @@ import {
 
 const tasksContainer = document.getElementById("tasks-container");
 const lists = loadLists();
+console.log(lists);
 
 // Save list to local storage with id reference to the task
 
@@ -71,7 +72,7 @@ window.onload = function () {
   newListForm();
   setSaveListButton();
   setLocalStorageButton();
-  setSelectLists(document);
+  setSelectLists(document, lists);
   setListListeners(document);
 };
 
@@ -80,6 +81,7 @@ const plannedTab = document.getElementById("planned-tab");
 const allTab = document.getElementById("all-tab");
 const doneTab = document.getElementById("done-tab");
 const allTasks = loadTasks();
+console.log(allTasks);
 
 function setTabs() {
   todayTab.addEventListener("click", function () {
@@ -148,7 +150,7 @@ function setSelectElement(element) {
   }
 }
 
-function setSelectLists(element) {
+function setSelectLists(element, lists) {
   const select = element.getElementsByClassName("select-list");
   for (let i = 0; i < select.length; i++) {
     addOptionToTheListSelect(select[i], lists);
@@ -163,21 +165,31 @@ function setSaveListButton() {
 }
 
 function listOptionsController(choice_element) {
-  if (choice_element.value === "Add a list") {
-    console.log("remove this task from any lists");
-  } else if (choice_element.value === "new-list") {
-    console.log("create new list");
+  let task_id =
+    choice_element.parentElement.parentElement.parentElement.parentElement.id;
+  if (choice_element.value === "1") {
+    deleteTaskFromLists(task_id);
   } else {
-    let task_id =
-      choice_element.parentElement.parentElement.parentElement.parentElement.id;
+    deleteTaskFromLists(task_id);
     addTaskToList(choice_element.value, task_id);
   }
 }
 
 function addTaskToList(list_id, task_id) {
   let list = findList(list_id);
-  list.tasks.push(task_id);
-  console.log(list);
+  saveList(list, task_id);
+  console.log(lists);
+}
+
+function deleteTaskFromLists(task_id) {
+  for (let i = 0; i < lists.length; i++) {
+    var tasksinlists = lists[i].tasks;
+    let index = tasksinlists.indexOf(task_id);
+    if (index > -1) {
+      tasksinlists.splice(index, 1);
+    }
+  }
+  localStorage.setItem("lists", JSON.stringify(lists));
 }
 
 function findList(list_id) {
@@ -191,10 +203,19 @@ function saveNewList() {
   var list = getListInfo();
   saveList(list);
   createNewListForm(list.name, list.color, list.id);
+  var newlist = [list];
+  setSelectLists(document, newlist);
 }
 
-function saveList(list) {
-  lists.push(list);
+function saveList(new_list, task_id) {
+  let finding = findList(new_list.id);
+  if (finding === undefined) {
+    lists.push(new_list);
+  } else {
+    finding.tasks.push(task_id);
+    let replaceList = lists.find((x) => x.id === new_list.id);
+    Object.assign(replaceList, finding);
+  }
   localStorage.setItem("lists", JSON.stringify(lists));
 }
 
@@ -214,12 +235,16 @@ function setListListeners(element) {
   for (let i = 0; i < listsElements.length; i++) {
     listsElements[i].addEventListener("click", function () {
       filterTasksByList(this.id);
+      console.log(this.id);
     });
   }
 }
 
+//
+
 function filterTasksByList(list_id) {
   let list = findList(list_id);
+  console.log(findList(list_id));
   let tasks = [];
   for (let i = 0; i < list.tasks.length; i++) {
     let task = allTasks.filter((obj) => {
@@ -227,10 +252,10 @@ function filterTasksByList(list_id) {
     });
     tasks.push(task);
   }
-  console.log(tasks);
+  // console.log(tasks);
 }
 
-function saveTask(taskForm) {
+export function saveTask(taskForm) {
   let data = getFormElements(taskForm);
   let name = data.nameInput.value;
   let note = data.noteInput.value;
@@ -243,35 +268,37 @@ function saveTask(taskForm) {
     }
   }
   let deadline = checkifDateEntered();
-
   let done = data.doneInput.checked;
   let date = Date.now();
-  const task = createTask(taskForm.id, name, note, deadline, done, date);
+  let list = data.listInput.value;
+  const task = createTask(taskForm.id, name, note, deadline, done, list, date);
   if (taskForm.id in localStorage) {
-    changeTask(taskForm.id, name, note, deadline, done);
+    changeTask(taskForm.id, name, note, deadline, done, list);
   } else {
     allTasks.push(task);
     localStorage.setItem(taskForm.id, JSON.stringify(task));
   }
 }
 
-function createTask(id, name, note, deadline, done, date) {
+function createTask(id, name, note, deadline, done, list, date) {
   return {
     id: id,
     name: name,
     note: note,
     deadline: deadline,
     done: done,
+    list: list,
     date: date,
   };
 }
 
-function changeTask(id, name, note, deadline, done) {
+function changeTask(id, name, note, deadline, done, list) {
   const task = JSON.parse(localStorage.getItem(id));
   task.name = name;
   task.note = note;
   task.deadline = deadline;
   task.done = done;
+  task.list = list;
   localStorage.setItem(id, JSON.stringify(task));
   let replaceTask = allTasks.find((x) => x.id === task.id);
   Object.assign(replaceTask, task);

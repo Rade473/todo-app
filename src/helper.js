@@ -1,3 +1,5 @@
+import { saveTask } from "./index.js";
+
 export function setTextArea(element) {
   const tx = element.getElementsByTagName("textarea");
   for (let i = 0; i < tx.length; i++) {
@@ -38,7 +40,6 @@ function clearStorage() {
 }
 
 export function newListForm() {
-  // Get the modal
   var modal = document.getElementById("myModal");
   // Get the button that opens the modal
   const newListButton = document.getElementById("new-list");
@@ -65,8 +66,10 @@ export function newListForm() {
 
 function closeMenus() {
   let openMenus = document.getElementsByClassName("new-task-info show");
+
   if (openMenus.length > 0) {
     for (let i = 0; i < openMenus.length; i++) {
+      saveTask(openMenus[i].parentElement.parentElement);
       openMenus[i].classList.remove("show");
     }
   }
@@ -100,20 +103,6 @@ export function closeMenusOnOutsideClick() {
   });
 }
 
-export function listOptionsController(choice_element) {
-  console.log(choice_element);
-  if (choice_element.value === "Add a list") {
-    console.log("remove this task from any lists");
-  } else if (choice_element.value === "new-list") {
-    console.log("create new list");
-  } else {
-    let task_id =
-      choice_element.parentElement.parentElement.parentElement.parentElement.id;
-    console.log();
-
-    // call a function to add the task id to the corresponding list
-  }
-}
 export function setTaskForms(element) {
   const taskForms = element.getElementsByClassName("new-task-info");
   for (let i = 0; i < taskForms.length; i++) {
@@ -126,7 +115,7 @@ export function addOptionToTheListSelect(element, lists) {
     let option = document.createElement("option");
     option.value = lists[i].id;
     option.textContent = lists[i].name;
-    element.prepend(option);
+    element.append(option);
   }
 }
 
