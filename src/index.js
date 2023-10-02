@@ -73,6 +73,7 @@ window.onload = function () {
   setLocalStorageButton();
   setListListeners(document);
   addDeleteButtonListenersToTasks(document);
+  adddDeleteButtonListenersToLists(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -81,6 +82,7 @@ const allTab = document.getElementById("all-tab");
 const doneTab = document.getElementById("done-tab");
 const allTasks = loadTasks();
 console.log(allTasks);
+console.log(lists);
 
 function setTabs() {
   todayTab.addEventListener("click", function () {
@@ -199,12 +201,13 @@ function findList(list_id) {
 }
 
 function saveNewList() {
-  var list = getListInfo();
+  let list = getListInfo();
   saveList(list);
   createNewListForm(list.name, list.color, list.id);
   var newlist = [list];
   setSelectLists(document, newlist);
   setListListeners(document);
+  adddDeleteButtonListenersToLists(document);
 }
 
 function saveList(new_list, task_id) {
@@ -231,12 +234,12 @@ function getListInfo() {
 }
 
 function setListListeners(element) {
-  let listsElements = element.getElementsByClassName("list");
+  let listsElements = element.getElementsByClassName("list clickable");
   for (let i = 0; i < listsElements.length; i++) {
     listsElements[i].addEventListener("click", function () {
       clearTaskPage();
-      populateTaskPage(filterTasksByList(this.id));
-      let list = findList(this.id);
+      populateTaskPage(filterTasksByList(this.parentElement.id));
+      let list = findList(this.parentElement.id);
       changePageTitle(list.name);
       changeTitleColor(list.color);
     });
@@ -305,6 +308,7 @@ function changeTask(id, name, note, deadline, done, list) {
   let replaceTask = allTasks.find((x) => x.id === task.id);
   Object.assign(replaceTask, task);
 }
+
 function clearTaskPage() {
   tasksContainer.innerHTML = "";
 }
@@ -364,13 +368,9 @@ function filterDoneTasks(array) {
   }
   return doneTasks;
 }
-
+// Delete tasks
 function deleteTask(form, task_id) {
-  // console.log(form);
-  // console.log(task_id);
-  form.innerHTML = "";
-  console.log(form);
-  console.log(task_id);
+  form.remove();
   let index = allTasks
     .map((x) => {
       return x.id;
@@ -379,11 +379,11 @@ function deleteTask(form, task_id) {
   allTasks.splice(index, 1);
   localStorage.removeItem(task_id);
   deleteTaskFromLists(task_id);
-  console.log(lists);
 }
 
 function addDeleteButtonListenersToTasks(element) {
   let buttons = element.getElementsByClassName("task-delete-button");
+  console.log(buttons);
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("click", function () {
       let taskForm = this.parentElement.parentElement;
@@ -392,7 +392,42 @@ function addDeleteButtonListenersToTasks(element) {
   }
 }
 
-// Delete tasks
 // delete lists
+// FIX LISTS MISTAKE, EVENT HAPPENS MULTIPLE TIMES ON CLICK
+function deleteList(form, list_id) {
+  form.remove();
+  let index = lists
+    .map((x) => {
+      return x.id;
+    })
+    .indexOf(Number(list_id));
+  deleteListFromTasks(list_id);
+  lists.splice(index, 1);
+  console.log(lists);
+  localStorage.setItem("lists", JSON.stringify(lists));
+}
 
-function deleteList(form, list_id) {}
+function deleteListFromTasks(list_id) {
+  console.log(list_id);
+  let list = findList(Number(list_id));
+  console.log(list);
+  // for (let i = 0; i < list.tasks.length; i++) {
+  //   let task = JSON.parse(localStorage.getItem(list.tasks[i]));
+  //   task.list = 1;
+  //   localStorage.setItem(task.id, JSON.stringify(task));
+  //   let replaceTask = allTasks.find((x) => x.id === task.id);
+  //   Object.assign(replaceTask, task);
+  // }
+}
+
+function adddDeleteButtonListenersToLists(element) {
+  let buttons = element.getElementsByClassName("list-delete-button");
+  console.log(buttons);
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () {
+      let listForm = this.parentElement;
+      console.log(listForm);
+      deleteList(listForm, listForm.id);
+    });
+  }
+}
