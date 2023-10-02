@@ -19,7 +19,6 @@ export function fillTaskData(form, task) {
   formElements.deadlineInput.value = checkifDateEntered();
   formElements.doneInput.checked = task.done;
   formElements.listInput.value = task.list;
-  console.log(formElements.listInput);
 
   return form;
 }

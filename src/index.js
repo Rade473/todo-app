@@ -26,7 +26,6 @@ import {
 
 const tasksContainer = document.getElementById("tasks-container");
 const lists = loadLists();
-console.log(lists);
 
 // Save list to local storage with id reference to the task
 
@@ -72,9 +71,7 @@ window.onload = function () {
   newListForm();
   setSaveListButton();
   setLocalStorageButton();
-  // setSelectLists(document, lists);
   setListListeners(document);
-  addDefaultsToOptions(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -234,29 +231,25 @@ function setListListeners(element) {
   let listsElements = element.getElementsByClassName("list");
   for (let i = 0; i < listsElements.length; i++) {
     listsElements[i].addEventListener("click", function () {
-      filterTasksByList(this.id);
-      console.log(this.id);
+      clearTaskPage();
+      populateTaskPage(filterTasksByList(this.id));
+      let list = findList(this.id);
+      changePageTitle(list.name);
+      changeTitleColor(list.color);
     });
   }
-}
-function addDefaultsToOptions(element) {
-  // Figure out a way to set the values or add options for choosing lists before we fill in the form
-  // or separately fill in the list input
 }
 
 //
 
 function filterTasksByList(list_id) {
-  let list = findList(list_id);
-  console.log(findList(list_id));
-  let tasks = [];
-  for (let i = 0; i < list.tasks.length; i++) {
-    let task = allTasks.filter((obj) => {
-      return obj.id === allTasks.id;
-    });
-    tasks.push(task);
+  let listTasks = [];
+  for (let i = 0; i < allTasks.length; i++) {
+    if (allTasks[i].list === list_id) {
+      listTasks.push(allTasks[i]);
+    }
   }
-  // console.log(tasks);
+  return listTasks;
 }
 
 export function saveTask(taskForm) {
@@ -276,7 +269,7 @@ export function saveTask(taskForm) {
   let date = Date.now();
 
   let list = data.listInput.value;
-  console.log(list);
+
   const task = createTask(taskForm.id, name, note, deadline, done, list, date);
   if (taskForm.id in localStorage) {
     changeTask(taskForm.id, name, note, deadline, done, list);
