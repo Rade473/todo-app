@@ -1,4 +1,5 @@
 import { parse } from "date-fns";
+
 import { format } from "date-fns";
 
 export function fillTaskData(form, task) {
@@ -16,9 +17,10 @@ export function fillTaskData(form, task) {
     }
   }
   formElements.deadlineInput.value = checkifDateEntered();
-
   formElements.doneInput.checked = task.done;
   formElements.listInput.value = task.list;
+  console.log(formElements.listInput);
+
   return form;
 }
 
@@ -27,14 +29,14 @@ export function getFormElements(form) {
   let noteInput = form.getElementsByClassName("new-task-notes")[0];
   let deadline = form.getElementsByClassName("new-task-deadline")[0];
   let done = form.getElementsByClassName("task-done")[0];
-  let list = form.getElementsByClassName("select-list")[0];
+  let listInput = form.getElementsByClassName("select-list")[0];
 
   return {
     nameInput: nameInput,
     noteInput: noteInput,
     deadlineInput: deadline,
     doneInput: done,
-    listInput: list,
+    listInput: listInput,
   };
 }
 
@@ -54,6 +56,7 @@ export function createNewTaskForm() {
   const newForm = hiddenForm.cloneNode(true);
   newForm.setAttribute("id", uniqueId());
   newForm.removeAttribute("hidden");
+  newForm.classList.add("task-with-id");
   return newForm;
 }
 

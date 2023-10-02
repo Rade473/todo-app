@@ -72,8 +72,9 @@ window.onload = function () {
   newListForm();
   setSaveListButton();
   setLocalStorageButton();
-  setSelectLists(document, lists);
+  // setSelectLists(document, lists);
   setListListeners(document);
+  addDefaultsToOptions(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -178,7 +179,6 @@ function listOptionsController(choice_element) {
 function addTaskToList(list_id, task_id) {
   let list = findList(list_id);
   saveList(list, task_id);
-  console.log(lists);
 }
 
 function deleteTaskFromLists(task_id) {
@@ -239,6 +239,10 @@ function setListListeners(element) {
     });
   }
 }
+function addDefaultsToOptions(element) {
+  // Figure out a way to set the values or add options for choosing lists before we fill in the form
+  // or separately fill in the list input
+}
 
 //
 
@@ -270,7 +274,9 @@ export function saveTask(taskForm) {
   let deadline = checkifDateEntered();
   let done = data.doneInput.checked;
   let date = Date.now();
+
   let list = data.listInput.value;
+  console.log(list);
   const task = createTask(taskForm.id, name, note, deadline, done, list, date);
   if (taskForm.id in localStorage) {
     changeTask(taskForm.id, name, note, deadline, done, list);
@@ -311,6 +317,7 @@ function populateTaskPage(taskArray) {
   for (let i = 0; i < taskArray.length; i++) {
     let task = taskArray[i];
     let form = createNewTaskForm();
+    setSelectLists(form, lists);
     addFormToWindow(fillTaskData(form, task));
   }
 }
