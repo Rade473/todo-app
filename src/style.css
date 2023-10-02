@@ -221,8 +221,18 @@ button#new-list{
   padding: 15px;
 }
 
+.task-with-id{
+  width: 95%;
+}
 .new-task-form {
   display: flex;
+
+}
+
+
+.new-task-name{
+  width: 90%;
+  -webkit-border-before-width: 90%;
 }
 
 .new-task-info{
@@ -393,6 +403,22 @@ textarea {
   max-width: 600px;
   width: 80%; /* Could be more or less, depending on screen size */
 }
+
+.task-delete-button{
+  position: absolute;
+  right: 10px;
+  border: none;
+  background: none;
+  padding: 3px;
+  fill: gray;
+  color: gray;
+}
+
+.task-delete-button:hover
+{
+  cursor: pointer;
+}
+
 
 
 

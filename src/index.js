@@ -72,6 +72,7 @@ window.onload = function () {
   setSaveListButton();
   setLocalStorageButton();
   setListListeners(document);
+  addDeleteButtonListenersToTasks(document);
 };
 
 const todayTab = document.getElementById("today-tab");
@@ -120,6 +121,7 @@ function setListenersForFormElements(form) {
   setDoneCheckers(form);
   setFormSubmit(form);
   setSelectElement(form);
+  addDeleteButtonListenersToTasks(form);
 }
 
 function setNewTaskButton() {
@@ -202,6 +204,7 @@ function saveNewList() {
   createNewListForm(list.name, list.color, list.id);
   var newlist = [list];
   setSelectLists(document, newlist);
+  setListListeners(document);
 }
 
 function saveList(new_list, task_id) {
@@ -361,3 +364,35 @@ function filterDoneTasks(array) {
   }
   return doneTasks;
 }
+
+function deleteTask(form, task_id) {
+  // console.log(form);
+  // console.log(task_id);
+  form.innerHTML = "";
+  console.log(form);
+  console.log(task_id);
+  let index = allTasks
+    .map((x) => {
+      return x.id;
+    })
+    .indexOf(task_id);
+  allTasks.splice(index, 1);
+  localStorage.removeItem(task_id);
+  deleteTaskFromLists(task_id);
+  console.log(lists);
+}
+
+function addDeleteButtonListenersToTasks(element) {
+  let buttons = element.getElementsByClassName("task-delete-button");
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () {
+      let taskForm = this.parentElement.parentElement;
+      deleteTask(taskForm, taskForm.id);
+    });
+  }
+}
+
+// Delete tasks
+// delete lists
+
+function deleteList(form, list_id) {}
