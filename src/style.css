@@ -49,6 +49,8 @@ body, html {
   
 }
 
+
+
  .icon {
   height: 24px;
   width: 24px;
@@ -66,14 +68,60 @@ body, html {
   fill: white;
 }
 
-.tab.today > .icon-container> .icon {
-  background-color: blue;
- 
+.tab.all.chosen > .icon > svg{
+  stroke: black;
+  fill: black;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+
+}
+.tab.all.chosen > .icon {
+  background-color: white;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
 }
 
-.tab.today > .icon-container> .icon > svg {
-  stroke: white;
+.tab.all.chosen{
+  background-color: black;
+  color: white;
+  
 }
+
+.tab.today.chosen{
+  color: white;
+  background-color: blue;
+}
+
+.tab.today > .icon-container> .icon {
+  background-color: blue;
+}
+
+.tab.today.chosen >.icon-container> .icon{
+  background-color: white;
+}
+
+.tab.today.chosen > .icon-container> .icon > svg > path {
+ stroke: blue;
+}
+
+.tab.today > .icon-container> .icon > svg > path {
+  stroke: white
+}
+
+.tab.today.chosen >  .icon-container> .icon>.calendar-date{
+  color: blue;
+}
+
+.calendar-date{
+  position: absolute;
+  font-size: 8px;
+  top: 42%;
+  color: white;
+}
+
+
 
 .tab.planned > .icon {
   background-color: red;
@@ -83,22 +131,41 @@ body, html {
   stroke: white;
 }
 
-
-.tab.flagged > .icon > svg {
-  stroke: white;
-  fill: white;
-  height: 70%;
-  width: 70%;
+.tab.planned.chosen {
+  background-color: red;
+  color: white;
 }
 
+.tab.planned.chosen > .icon {
+  background-color: white;
+}
+
+.tab.planned.chosen > .icon > svg {
+ stroke:red
+} 
+
+
 .tab.done > .icon {
-  background-color: darkgray;
+  background-color: rgba(40, 39, 39, 0.364);
 }
 
 .tab.done > .icon > svg {
   stroke: white
 }
 
+.tab.done.chosen{
+  background-color:rgba(40, 39, 39, 0.364);
+  color: white;
+
+}
+
+.tab.done.chosen > .icon{
+  background-color: white;
+}
+
+.tab.done.chosen > .icon > svg {
+  stroke: rgba(40, 39, 39, 0.364);
+}
 
 
 .icon > svg {
@@ -112,12 +179,7 @@ body, html {
 }
 
 
-.calendar-date{
-  position: absolute;
-  font-size: 8px;
-  top: 42%;
-  color: white;
-}
+
 
 .tab > .tab-name {
   font-size: 13px;
@@ -173,6 +235,11 @@ div.list.clickable{
   margin: 0px;
   padding: 0px;
 }
+
+div.list.chosen{
+  /* Add background, text and icon color change */
+}
+
 
 div.header {
   display: flex;
@@ -242,7 +309,6 @@ button#new-list{
 }
 .new-task-form {
   display: flex;
-
 }
 
 
@@ -259,16 +325,36 @@ button#new-list{
   position: relative;
   padding-top: 5px;
   padding-bottom: 10px;
-  height: 15px;
+  height: auto
+}
+.accordeon-content > div {
   overflow: hidden;
-  transition: height 0.5s ease-out;
+  padding: 0px;
+  margin: 0px;
 }
 
+.accordeon-content{
+  display: grid;
+
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms;
+}
+
+.accordeon-content.show{
+  grid-template-rows: 1fr;
+}
 .new-task-info.show{
   height: auto;
-
 }
 
+#test-container{
+  height: 15px;
+  background-color: red;
+}
+
+#test-container.show{
+  height: auto;
+}
 textarea:focus{
   outline: none;
 }
@@ -283,7 +369,7 @@ input:focus{
 
 input[type=text]{
   font-size: 16px;
-  margin-bottom: 3px;
+
 }
 
 input, select, textarea, button{font-family:inherit;}
@@ -354,15 +440,9 @@ div.check-container:has(>div.check>.task-done:checked){
   border:1px solid orange;
 }
 
-.collapsible {
-  overflow: hidden;
-  transition: all 0.5s ease-in-out;
-  height: auto;
-}
 
-.collapsible.collapsed {
-  height:0;
-}
+
+
 
 textarea {
   resize: none;
@@ -528,6 +608,16 @@ button#clear-storage{
 }
 button#clear-storage:hover{
   cursor: pointer;
+}
+
+button#test{
+  position: absolute;
+  right: 200px;
+  bottom: 10px;
+  background: none;
+  border: none;
+  text-decoration-line: underline;
+  color: #aaa;
 }
 
 html {

@@ -65,11 +65,12 @@ export function newListForm() {
 }
 
 function closeMenus() {
-  let openMenus = document.getElementsByClassName("new-task-info show");
+  let openMenus = document.getElementsByClassName("accordeon-content show");
 
   if (openMenus.length > 0) {
     for (let i = 0; i < openMenus.length; i++) {
-      saveTask(openMenus[i].parentElement.parentElement);
+      saveTask(openMenus[i].parentElement.parentElement.parentElement);
+      openMenus[i].parentElement.classList.remove("show");
       openMenus[i].classList.remove("show");
     }
   }
@@ -77,12 +78,14 @@ function closeMenus() {
 
 function showFullMenu() {
   closeMenus();
-  this.classList.add("show");
+  this.firstChild.nextElementSibling.nextElementSibling.classList.add("show");
+  console.log();
 }
 
 function taskFormListener(form) {
   form.addEventListener("click", showFullMenu);
 }
+// unused
 
 export function closeMenusOnOutsideClick() {
   document.addEventListener("click", function (event) {
@@ -92,13 +95,19 @@ export function closeMenusOnOutsideClick() {
         return;
       }
     }
-    if (
-      event.target.closest("div.new-task-info.show") !== null &&
-      event.target.closest("div.new-task-info.show").classList.contains("show")
-    ) {
-      return;
-    } else {
-      closeMenus();
+
+    let target1 = event.target.parentElement.nextElementSibling;
+    let target2 = event.target.nextElementSibling;
+    if (target1) {
+      if (target1.classList.contains("show")) {
+        return;
+      } else if (target2) {
+        if (event.target.nextElementSibling.classList.contains("show")) {
+          return;
+        }
+      } else {
+        closeMenus();
+      }
     }
   });
 }
@@ -120,14 +129,17 @@ export function addOptionToTheListSelect(element, lists) {
 }
 
 function doneCheckersListener(check) {
-  check.addEventListener("click", function (event) {
-    let a = check.parentElement.parentElement.nextElementSibling;
+  check.addEventListener("click", function () {
+    saveTask(check.parentElement.parentElement.parentElement.parentElement);
+    let a =
+      check.parentElement.parentElement.nextElementSibling.querySelector(
+        ":nth-child(2)"
+      );
     if (a.classList.contains("show")) {
       return;
     }
     if (!a.classList.contains("show")) {
       closeMenus();
-      a.classList.add("show");
     }
   });
 }
@@ -138,36 +150,3 @@ export function setDoneCheckers(element) {
     doneCheckersListener(doneCheckers[i]);
   }
 }
-
-function selectListOptions(choice) {}
-
-// Expand animation
-// const button = document.querySelector(".button");
-
-// button.addEventListener("click", () => {
-//   const content = document.querySelector(".collapsible");
-//   expandElement(content, "collapsed");
-// });
-
-// function expandElement(elem, collapseClass) {
-//   elem.style.height = "";
-//   elem.style.transition = "none";
-
-//   const startHeight = window.getComputedStyle(elem).height;
-
-//   elem.classList.toggle(collapseClass);
-//   const height = window.getComputedStyle(elem).height;
-//   elem.style.height = startHeight;
-
-//   requestAnimationFrame(() => {
-//     elem.style.transition = "";
-
-//     requestAnimationFrame(() => {
-//       elem.style.height = height;
-//     });
-//   });
-//   elem.addEventListener("transitionend", () => {
-//     elem.style.height = "";
-//     elem.removeEventListener("transitionend", this);
-//   });
-// }

@@ -1,7 +1,5 @@
 import { parse } from "date-fns";
 
-import { format } from "date-fns";
-
 export function fillTaskData(form, task) {
   form.setAttribute("id", task.id);
   let formElements = getFormElements(form);

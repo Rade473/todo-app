@@ -12,7 +12,7 @@ import {
 import { isToday } from "date-fns";
 import { format } from "date-fns";
 import { parse } from "date-fns";
-import { isAfter } from "date-fns";
+
 import { isBefore } from "date-fns";
 
 import {
@@ -24,6 +24,9 @@ import {
   changeTitleColor,
 } from "./display";
 
+import * as JsSearch from "js-search";
+
+const searchbar = document.getElementById("search-bar");
 const tasksContainer = document.getElementById("tasks-container");
 const lists = loadLists();
 
@@ -66,7 +69,7 @@ window.onload = function () {
   closeMenusOnOutsideClick();
   setNewTaskButton();
   loadTasks();
-  populateTaskPage(allTasks);
+  populateTaskPage(allTasks, lists);
   setTabs();
   newListForm();
   setSaveListButton();
@@ -74,40 +77,49 @@ window.onload = function () {
   setListListeners(document);
   addDeleteButtonListenersToTasks(document);
   adddDeleteButtonListenersToLists(document);
+  addSearchEventListener(searchbar);
+  testEventListener();
 };
 
 const todayTab = document.getElementById("today-tab");
 const plannedTab = document.getElementById("planned-tab");
 const allTab = document.getElementById("all-tab");
 const doneTab = document.getElementById("done-tab");
+const tabs = document.getElementsByClassName("tab");
 const allTasks = loadTasks();
-console.log(allTasks);
-console.log(lists);
 
 function setTabs() {
   todayTab.addEventListener("click", function () {
     clearTaskPage();
-    populateTaskPage(filterTodayTasks(allTasks));
+    populateTaskPage(filterTodayTasks(allTasks), lists);
     changePageTitle("Today");
     changeTitleColor("blue");
+    removeChosenClassFromTabs();
+    changeTabColor(todayTab);
   });
   plannedTab.addEventListener("click", function () {
     clearTaskPage();
-    populateTaskPage(filterFutureTasks(allTasks));
+    populateTaskPage(filterFutureTasks(allTasks), lists);
     changePageTitle("Planned");
     changeTitleColor("red");
+    removeChosenClassFromTabs();
+    changeTabColor(plannedTab);
   });
   allTab.addEventListener("click", function () {
     clearTaskPage();
-    populateTaskPage(allTasks);
+    populateTaskPage(allTasks, lists);
     changePageTitle("All tasks");
     changeTitleColor("black");
+    removeChosenClassFromTabs();
+    changeTabColor(allTab);
   });
   doneTab.addEventListener("click", function () {
     clearTaskPage();
-    populateTaskPage(filterDoneTasks(allTasks));
+    populateTaskPage(filterDoneTasks(allTasks), lists);
     changePageTitle("Done");
     changeTitleColor("gray");
+    removeChosenClassFromTabs();
+    changeTabColor(doneTab);
   });
 }
 
@@ -154,8 +166,12 @@ function setSelectElement(element) {
 
 function setSelectLists(element, lists) {
   const select = element.getElementsByClassName("select-list");
-  for (let i = 0; i < select.length; i++) {
-    addOptionToTheListSelect(select[i], lists);
+  if (lists == undefined) {
+    return;
+  } else {
+    for (let i = 0; i < select.length; i++) {
+      addOptionToTheListSelect(select[i], lists);
+    }
   }
 }
 
@@ -168,7 +184,8 @@ function setSaveListButton() {
 
 function listOptionsController(choice_element) {
   let task_id =
-    choice_element.parentElement.parentElement.parentElement.parentElement.id;
+    choice_element.parentElement.parentElement.parentElement.parentElement
+      .parentElement.parentElement.id;
   if (choice_element.value === "1") {
     deleteTaskFromLists(task_id);
   } else {
@@ -238,7 +255,7 @@ function setListListeners(element) {
   for (let i = 0; i < listsElements.length; i++) {
     listsElements[i].addEventListener("click", function () {
       clearTaskPage();
-      populateTaskPage(filterTasksByList(this.parentElement.id));
+      populateTaskPage(filterTasksByList(this.parentElement.id), lists);
       let list = findList(this.parentElement.id);
       changePageTitle(list.name);
       changeTitleColor(list.color);
@@ -313,7 +330,7 @@ function clearTaskPage() {
   tasksContainer.innerHTML = "";
 }
 
-function populateTaskPage(taskArray) {
+function populateTaskPage(taskArray, lists) {
   for (let i = 0; i < taskArray.length; i++) {
     let task = taskArray[i];
     let form = createNewTaskForm();
@@ -335,16 +352,6 @@ function filterTodayTasks(array) {
 
 function getADate(string) {
   return parse(string, "dd.MM.yyyy, HH:mm", new Date());
-}
-
-function filterLateTasks(array) {
-  let lateTasks = [];
-  for (let i = 0; i < array.length; i++) {
-    let taskDate = array[i].deadline;
-    if (isBefore(getADate(taskDate), new Date(Date.now())))
-      lateTasks.push(array[i]);
-  }
-  return lateTasks;
 }
 
 function filterFutureTasks(array) {
@@ -383,18 +390,22 @@ function deleteTask(form, task_id) {
 
 function addDeleteButtonListenersToTasks(element) {
   let buttons = element.getElementsByClassName("task-delete-button");
-  console.log(buttons);
+
   for (let i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener("click", function () {
-      let taskForm = this.parentElement.parentElement;
-      deleteTask(taskForm, taskForm.id);
-    });
+    buttons[i].addEventListener("click", deleteTaskEventListener);
   }
+}
+
+function deleteTaskEventListener() {
+  let taskForm = this.parentElement.parentElement;
+  deleteTask(taskForm, taskForm.id);
 }
 
 // delete lists
 // FIX LISTS MISTAKE, EVENT HAPPENS MULTIPLE TIMES ON CLICK
 function deleteList(form, list_id) {
+  console.log(form);
+  console.log(list_id);
   form.remove();
   let index = lists
     .map((x) => {
@@ -408,26 +419,139 @@ function deleteList(form, list_id) {
 }
 
 function deleteListFromTasks(list_id) {
-  console.log(list_id);
   let list = findList(Number(list_id));
-  console.log(list);
-  // for (let i = 0; i < list.tasks.length; i++) {
-  //   let task = JSON.parse(localStorage.getItem(list.tasks[i]));
-  //   task.list = 1;
-  //   localStorage.setItem(task.id, JSON.stringify(task));
-  //   let replaceTask = allTasks.find((x) => x.id === task.id);
-  //   Object.assign(replaceTask, task);
-  // }
+
+  for (let i = 0; i < list.tasks.length; i++) {
+    let task = JSON.parse(localStorage.getItem(list.tasks[i]));
+    task.list = 1;
+    localStorage.setItem(task.id, JSON.stringify(task));
+    let replaceTask = allTasks.find((x) => x.id === task.id);
+    Object.assign(replaceTask, task);
+  }
 }
 
 function adddDeleteButtonListenersToLists(element) {
   let buttons = element.getElementsByClassName("list-delete-button");
-  console.log(buttons);
   for (let i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener("click", function () {
-      let listForm = this.parentElement;
-      console.log(listForm);
-      deleteList(listForm, listForm.id);
-    });
+    buttons[i].addEventListener("click", deleteListEventListener);
   }
 }
+
+function deleteListEventListener() {
+  let listForm = this.parentElement;
+  deleteList(listForm, listForm.id);
+}
+
+function removeChosenClassFromTabs() {
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove("chosen");
+  }
+}
+
+function changeTabColor(tab) {
+  tab.classList.add("chosen");
+}
+
+function addSearchEventListener(element) {
+  element.addEventListener("input", function () {
+    let result = search(element.value, allTasks);
+    changePageTitle("Search");
+    clearTaskPage();
+    populateTaskPage(result);
+  });
+}
+
+function search(input, object) {
+  let search = new JsSearch.Search("id");
+  search.addIndex("name");
+  search.addIndex("note");
+  search.addDocuments(object);
+  return search.search(input);
+}
+
+function testEventListener() {
+  let test = document.getElementById("test");
+  test.addEventListener("click", loadTestData, { once: true });
+}
+function loadTestData() {
+  for (let i = 0; i < testTasks.length; i++) {
+    allTasks.push(testTasks[i]);
+  }
+  for (let j = 0; j < testLists.length; j++) {
+    lists.push(testLists[j]);
+  }
+  console.log(allTasks);
+  for (let i = 0; i < allTasks.length; i++) {
+    localStorage.setItem(allTasks[i].id, JSON.stringify(allTasks[i]));
+  }
+  localStorage.setItem("lists", JSON.stringify(lists));
+}
+
+let testTasks = [
+  {
+    id: "lna9x3r871ypp20mtws",
+    name: "Bread",
+    note: "I need to buy bread at the local store",
+    deadline: "04.10.2023, 22:00",
+    done: false,
+    list: "1696334726515",
+    date: 1696334765990,
+  },
+  {
+    id: "lna9ynilrencmbyw2f",
+    name: "Bananas",
+    note: "",
+    deadline: null,
+    done: false,
+    list: "1696334726515",
+    date: 1696334835819,
+  },
+  {
+    id: "lna9yybwzeq9tzw0ob",
+    name: "Milk",
+    note: "",
+    deadline: null,
+    done: false,
+    list: "1696334726515",
+    date: 1696334853428,
+  },
+  {
+    id: "lnalrgwd6n9mods1asd",
+    name: "Buy a present for Mike's birthday",
+    note: "",
+    deadline: null,
+    done: true,
+    list: "1696334753729",
+    date: 1696354671181,
+  },
+  {
+    id: "lnalyjhauvid5x3i7dj",
+    name: "Do the schedule",
+    note: "",
+    deadline: "04.10.2023, 19:43",
+    done: true,
+    list: "1696334736029",
+    date: 1696354995052,
+  },
+];
+
+let testLists = [
+  {
+    name: "Groceries",
+    color: "#d32727",
+    tasks: ["lna9yybwzeq9tzw0ob", "lna9x3r871ypp20mtws"],
+    id: 1696334726515,
+  },
+  {
+    name: "Work",
+    color: "#6cd327",
+    tasks: ["lnalyjhauvid5x3i7dj"],
+    id: 1696334736029,
+  },
+  {
+    name: "Mike's birthday party",
+    color: "#2a27d3",
+    tasks: ["lnalrgwd6n9mods1asd"],
+    id: 1696334753729,
+  },
+];
