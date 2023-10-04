@@ -474,17 +474,20 @@ function testEventListener() {
   test.addEventListener("click", loadTestData, { once: true });
 }
 function loadTestData() {
-  for (let i = 0; i < testTasks.length; i++) {
-    allTasks.push(testTasks[i]);
+  if (allTasks.length == 0 || lists.length === 0) {
+    for (let i = 0; i < testTasks.length; i++) {
+      allTasks.push(testTasks[i]);
+    }
+    for (let j = 0; j < testLists.length; j++) {
+      lists.push(testLists[j]);
+    }
+    console.log(allTasks);
+    for (let i = 0; i < allTasks.length; i++) {
+      localStorage.setItem(allTasks[i].id, JSON.stringify(allTasks[i]));
+    }
+    localStorage.setItem("lists", JSON.stringify(lists));
+    location.reload();
   }
-  for (let j = 0; j < testLists.length; j++) {
-    lists.push(testLists[j]);
-  }
-  console.log(allTasks);
-  for (let i = 0; i < allTasks.length; i++) {
-    localStorage.setItem(allTasks[i].id, JSON.stringify(allTasks[i]));
-  }
-  localStorage.setItem("lists", JSON.stringify(lists));
 }
 
 let testTasks = [
